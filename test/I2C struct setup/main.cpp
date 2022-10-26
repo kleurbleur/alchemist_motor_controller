@@ -61,12 +61,45 @@ const byte otherAddress = 8;
 void showNewData() {
 
     Serial.print("This just in    ");
-    Serial.print(controller.armA.enable);
-    Serial.print(' ');
-    Serial.print(controller.armB.enable);
-    Serial.print(' ');
-    Serial.println(controller.rings.enable);}
+    if (controller.armA.enable)
+    {
+        digitalWrite(motor_controller_arm_A_enable_pin, HIGH);
+        Serial.print("controller.armA.enable: ");
+        Serial.println(controller.armA.enable);
+    }
+    else if (!controller.armA.enable)
+    {
+        digitalWrite(motor_controller_arm_A_enable_pin, LOW);
+        Serial.print("controller.armA.enable: ");
+        Serial.println(controller.armA.enable);
+    }
+    
+    if (controller.armB.enable)
+    {
+        digitalWrite(motor_controller_arm_B_enable_pin, HIGH);
+        Serial.print("controller.armB.enable: ");
+        Serial.println(controller.armB.enable);
+    }
+    else if (!controller.armB.enable)
+    {
+        digitalWrite(motor_controller_arm_B_enable_pin, LOW);
+        Serial.print("controller.armB.enable: ");
+        Serial.println(controller.armB.enable);
+    }    Serial.print(' ');
 
+    if (controller.rings.enable)
+    {
+        digitalWrite(motor_controller_rings_enable_pin, HIGH);
+        Serial.print("controller.rings.enable: ");
+        Serial.println(controller.rings.enable);
+    }
+    else if (!controller.rings.enable)
+    {
+        digitalWrite(motor_controller_rings_enable_pin, LOW);
+        Serial.print("controller.rings.enable: ");
+        Serial.println(controller.rings.enable);
+    }
+}
 //============
 
         // this function is called by the Wire library when a message is received

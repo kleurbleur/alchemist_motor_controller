@@ -1,112 +1,34 @@
-//===================
-// Using I2C to send and receive structs between two Arduinos
-//   SDA is the data connection and SCL is the clock connection
-//   On an Uno  SDA is A4 and SCL is A5
-//   On an Mega SDA is 20 and SCL is 21
-//   GNDs must also be connected
-//===================
-
 #include <Arduino.h>
-#include <Wire.h>
 
+#define out1 2
+#define out2 3
+#define out3 4
+#define out4 5
 
-// PIN OUT
-const int motor_controller_arm_A_start_pin = 2;
-const int motor_controller_arm_A_end_pin = 3;
-const int motor_controller_arm_A_pause_pin = 4;
-const int motor_controller_arm_A_enable_pin = 5;
-
-const int motor_controller_arm_B_start_pin = 6;
-const int motor_controller_arm_B_end_pin = 7;
-const int motor_controller_arm_B_pause_pin = 8;
-const int motor_controller_arm_B_enable_pin = 9;
-
-const int motor_controller_rings_start_pin = 10;
-const int motor_controller_rings_enable_pin = 11;
-const int motor_controller_rings_pause_pin = 12;
-const int motor_controller_rings_continue_pin = 13;
-
-// data to be received needs to mirror what was sent from 
-struct motor {
-    uint8_t bottom;                 
-    uint8_t top;                   
-    uint8_t pause;                 
-    uint8_t enable;                
-};
-struct motorRing{
-    uint8_t start;             
-    uint8_t enable;           
-    uint8_t pause;            
-    uint8_t resume;          
-};
-
-struct controllerStruct{
-    motor armA;
-    motor armB;
-    motorRing rings;
-};
-
-controllerStruct controller;
-
-bool newRxData = false;
-
-
-// I2C control stuff
-
-const byte thisAddress = 9; // these need to be swapped for the other Arduino
-const byte otherAddress = 8;
-
-
-
-void showNewData() {
-
-    Serial.print("This just in    ");
-    Serial.print(controller.armA.enable);
-    Serial.print(' ');
-    Serial.print(controller.armB.enable);
-    Serial.print(' ');
-    Serial.println(controller.rings.enable);}
-
-//============
-
-        // this function is called by the Wire library when a message is received
-void receiveEvent(int numBytesReceived) {
-
-    if (newRxData == false) {
-            // copy the data to motor
-        Wire.readBytes( (byte*) &controller, numBytesReceived);
-        newRxData = true;
-    }
-    else {
-            // dump the data
-        while(Wire.available() > 0) {
-            byte c = Wire.read();
-        }
-    }
-}
-
-
-//=================================
+const int del = 5000;
 
 void setup() {
-    Serial.begin(115200);
-    Serial.println("\nStarting I2C Slave demo\n");
+  Serial.begin(115200);
+  while (!Serial) continue;
 
-    // set up I2C
-    Wire.begin(thisAddress); // join i2c bus
-    Wire.onReceive(receiveEvent); // register event
+  pinMode(out1, OUTPUT);
+  pinMode(out2, OUTPUT);
+  pinMode(out3, OUTPUT);
+  pinMode(out4, OUTPUT);
+
 }
-
-//============
 
 void loop() {
-
-        // this bit checks if a message has been received
-    if (newRxData == true) {
-        showNewData();
-        newRxData = false;
-    }
+    delay(del);
+    digitalWrite(out1, HIGH);
+    digitalWrite(out2, HIGH);
+    digitalWrite(out3, HIGH);
+    digitalWrite(out4, HIGH);
+    Serial.println("HIGH");
+    delay(del);
+    digitalWrite(out1, LOW);
+    digitalWrite(out2, LOW);
+    digitalWrite(out3, LOW);
+    digitalWrite(out4, LOW);
+    Serial.println("LOW");
 }
-
-
-//=============
